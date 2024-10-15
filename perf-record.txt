@@ -1,0 +1,20 @@
+list function to get the specific line details of cpu or mem prof
+
+BenchmarkAddTagsToName-10        1639554               721.7 ns/op           275 B/op       13 allocs/op
+740ms     53:           parts = append(parts, clean(v))
+
+
+BenchmarkAddTagsToName-10        3361519               300.7 ns/op           288 B/op         13 allocs/op
+ 390ms     53:           parts = append(parts, clean(v))
+
+BenchmarkAddTagsToName-10        4745287               234.1 ns/op           208 B/op         10 allocs/op - instead appending, writing into slice index result[i] = value[i]
+
+after slice capacity line number 39 & 45 of reporter.go
+
+BenchmarkAddTagsToName-10        6880632               146.0 ns/op            64 B/op          7 allocs/op
+
+Shifted from slice to buf
+BenchmarkAddTagsToName-10        7433506               144.6 ns/op           112 B/op          5 allocs/op
+
+updated clean function with writeClean by replace slice with bytes.WriteByte
+BenchmarkAddTagsToName-10        9146646               118.0 ns/op            96 B/op          2 allocs/op
