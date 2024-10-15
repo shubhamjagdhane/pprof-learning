@@ -15,8 +15,15 @@ go-torch:
 
 benchmem:
 	go test -bench . -benchmem
+
 cpuprofile:
 	go test -bench . -benchmem -cpuprofile prof.cpu
 
+memprofile:
+	go test -bench . -benchmem -memprofile prof.mem
+
 pprofcpu:
 	go tool pprof stats.test prof.cpu
+
+pprofmem:
+	go tool pprof -alloc_objects stats.test prof.mem
