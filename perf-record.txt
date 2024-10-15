@@ -18,3 +18,9 @@ BenchmarkAddTagsToName-10        7433506               144.6 ns/op           112
 
 updated clean function with writeClean by replace slice with bytes.WriteByte
 BenchmarkAddTagsToName-10        9146646               118.0 ns/op            96 B/op          2 allocs/op
+
+updated with sync.once for buf
+BenchmarkAddTagsToName-10       11362966               106.4 ns/op            32 B/op          1 allocs/op
+
+// instead defer using customize buf reset
+BenchmarkAddTagsToName-10         170900             20353 ns/op          268024 B/op          1 allocs/op

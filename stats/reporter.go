@@ -4,10 +4,17 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"sync"
 	"time"
 )
 
 var printStats = flag.Bool("printStats", false, "Print stats to console")
+
+var bufPool = sync.Pool{
+	New: func() interface{} {
+		return &bytes.Buffer{}
+	},
+}
 
 // IncCounter increments a counter.
 func IncCounter(name string, tags map[string]string, value int64) {
@@ -42,9 +49,9 @@ func addTagsToName(name string, tags map[string]string) string {
 	}
 	keyOrder = append(keyOrder, "endpoint", "os", "browser")
 
-	buf := &bytes.Buffer{}
-	buf.WriteString(name)
+	buf := bufPool.Get().(*bytes.Buffer)
 
+	buf.WriteString(name)
 	for _, k := range keyOrder {
 		buf.WriteString(".")
 		v, ok := tags[k]
@@ -58,7 +65,9 @@ func addTagsToName(name string, tags map[string]string) string {
 
 	}
 
-	return buf.String()
+	final := buf.String()
+	bufPool.Put(buf)
+	return final
 }
 
 // clean takes a string that may contain special characters, and replaces these
